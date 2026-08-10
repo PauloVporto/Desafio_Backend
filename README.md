@@ -4,7 +4,7 @@ API REST desenvolvida em **Python**, utilizando **FastAPI** como framework princ
 
 ## Arquitetura
 
-![Arquitetura da aplicação](docs/arquitetura.png)
+![Arquitetura da aplicação](docs/arquitetura_thinktechnology.png)
 
 | Componente | Responsabilidade |
 |---|---|
@@ -120,4 +120,3 @@ requirements.txt
 
 ---
 
-Um roteiro passo a passo para apresentação do projeto está em [`docs/APRESENTACAO.md`](docs/APRESENTACAO.md).
