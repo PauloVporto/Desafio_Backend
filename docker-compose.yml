@@ -2,28 +2,53 @@ services:
   api:
     build: .
     container_name: desafio-api
-    env_file:
-      - .env
+
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-desafio}
+      POSTGRES_USER: ${POSTGRES_USER:-desafio}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-desafio}
+      POSTGRES_HOST: ${POSTGRES_HOST:-db}
+      POSTGRES_PORT: ${POSTGRES_PORT:-5432}
+
+      MONGO_URL: ${MONGO_URL:-mongodb://mongo:27017}
+      MONGO_DB: ${MONGO_DB:-desafio}
+
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:-chave-dev-desafio-backend}
+      JWT_ALGORITHM: ${JWT_ALGORITHM:-HS256}
+      JWT_EXPIRE_MINUTES: ${JWT_EXPIRE_MINUTES:-60}
+
+      DJANGO_SECRET_KEY: ${DJANGO_SECRET_KEY:-chave-django-dev}
+
+      DJANGO_SUPERUSER_USERNAME: ${DJANGO_SUPERUSER_USERNAME:-admin}
+      DJANGO_SUPERUSER_PASSWORD: ${DJANGO_SUPERUSER_PASSWORD:-admin123456}
+      DJANGO_SUPERUSER_EMAIL: ${DJANGO_SUPERUSER_EMAIL:-admin@example.com}
+
     ports:
       - "8000:8000"
+
     depends_on:
       db:
         condition: service_healthy
       mongo:
         condition: service_healthy
+
     restart: unless-stopped
 
   db:
     image: postgres:16-alpine
     container_name: desafio-postgres
+
     environment:
       POSTGRES_DB: ${POSTGRES_DB:-desafio}
       POSTGRES_USER: ${POSTGRES_USER:-desafio}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-desafio}
+
     ports:
       - "5432:5432"
+
     volumes:
       - postgres_data:/var/lib/postgresql/data
+
     healthcheck:
       test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-desafio} -d ${POSTGRES_DB:-desafio}"]
       interval: 5s
@@ -33,10 +58,13 @@ services:
   mongo:
     image: mongo:8.0
     container_name: desafio-mongo
+
     ports:
       - "27017:27017"
+
     volumes:
       - mongo_data:/data/db
+
     healthcheck:
       test: ["CMD-SHELL", "mongosh --quiet --eval 'db.adminCommand({ ping: 1 }).ok' localhost:27017/test | grep 1"]
       interval: 5s
