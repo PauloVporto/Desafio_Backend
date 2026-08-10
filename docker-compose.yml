@@ -1,0 +1,48 @@
+services:
+  api:
+    build: .
+    container_name: desafio-api
+    env_file:
+      - .env
+    ports:
+      - "8000:8000"
+    depends_on:
+      db:
+        condition: service_healthy
+      mongo:
+        condition: service_healthy
+    restart: unless-stopped
+
+  db:
+    image: postgres:16-alpine
+    container_name: desafio-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-desafio}
+      POSTGRES_USER: ${POSTGRES_USER:-desafio}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-desafio}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-desafio} -d ${POSTGRES_DB:-desafio}"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+
+  mongo:
+    image: mongo:8.0
+    container_name: desafio-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    healthcheck:
+      test: ["CMD-SHELL", "mongosh --quiet --eval 'db.adminCommand({ ping: 1 }).ok' localhost:27017/test | grep 1"]
+      interval: 5s
+      timeout: 5s
+      retries: 15
+
+volumes:
+  postgres_data:
+  mongo_data:
