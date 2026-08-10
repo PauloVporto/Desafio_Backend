@@ -1,0 +1,58 @@
+name: CI - Testes Backend
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  testes:
+    name: Executar testes automatizados
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar codigo
+        uses: actions/checkout@v4
+
+      - name: Criar arquivo de ambiente
+        run: cp .env.example .env
+
+      - name: Construir containers
+        run: docker compose build
+
+      - name: Subir aplicacao
+        run: docker compose up -d
+
+      - name: Aguardar servicos
+        run: sleep 15
+
+      - name: Executar testes
+        run: |
+          docker compose exec -T api pytest -v \
+            --html=/app/reports/test-report.html \
+            --self-contained-html
+
+      - name: Copiar relatorio
+        if: always()
+        run: |
+          mkdir -p reports-ci
+          docker compose cp api:/app/reports/test-report.html reports-ci/test-report.html || true
+
+      - name: Salvar relatorio
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: relatorio-testes
+          path: reports-ci/test-report.html
+          if-no-files-found: ignore
+
+      - name: Mostrar logs em caso de erro
+        if: failure()
+        run: docker compose logs
+
+      - name: Encerrar containers
+        if: always()
+        run: docker compose down -v
