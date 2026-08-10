@@ -1,0 +1,19 @@
+{% extends "admin/index.html" %}
+
+{% block content %}
+{{ block.super }}
+<div class="module">
+    <table>
+        <caption>
+            <a href="{{ products_url }}" class="section">Produtos</a>
+        </caption>
+        <tbody>
+            <tr class="model-product">
+                <th scope="row"><a href="{{ products_url }}">Produtos cadastrados</a></th>
+                <td>Consulta</td>
+                <td>&nbsp;</td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{% endblock %}
