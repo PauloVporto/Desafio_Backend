@@ -1,122 +1,262 @@
-# Desafio Backend — Think Technology
+# Desafio Backend - Think Technology
 
-API REST desenvolvida em **Python**, utilizando **FastAPI** como framework principal, **Django** exclusivamente para administração (Django Admin), **PostgreSQL** para autenticação/usuários e **MongoDB** para o cadastro de produtos.
+Projeto desenvolvido para o desafio técnico de Backend da Think Technology.
 
-## Arquitetura
+A aplicação consiste em uma API REST para autenticação de usuários e gerenciamento de produtos. O projeto foi desenvolvido em Python utilizando FastAPI, Django Admin, PostgreSQL e MongoDB.
 
-![Arquitetura da aplicação](docs/arquitetura_thinktechnology.png)
+## Tecnologias utilizadas
 
-| Componente | Responsabilidade |
-|---|---|
-| **FastAPI** | API REST: autenticação, autorização, validação e CRUD de produtos |
-| **Django Admin** | Administração de usuários e consulta (somente leitura) de produtos |
-| **PostgreSQL** | Persistência de usuários, credenciais e permissões |
-| **MongoDB** | Persistência de produtos, acessado via `ProductRepository` |
-| **JWT / OAuth2** | Autenticação e autorização das rotas |
-| **Docker Compose** | Orquestração dos três serviços (API, Postgres, Mongo) |
+* Python 3.11
+* FastAPI
+* Django / Django Admin
+* PostgreSQL
+* MongoDB
+* SQLAlchemy
+* Pydantic
+* JWT / OAuth2
+* Docker e Docker Compose
+* Pytest
+* GitHub Actions
 
-O `ProductRepository` isola o acesso ao MongoDB do restante da aplicação, reduzindo o acoplamento entre a API e a camada de persistência.
+## Como funciona
 
-## Tecnologias
+A aplicação utiliza dois bancos de dados.
 
-| Categoria | Tecnologia |
-|---|---|
-| Linguagem | Python 3.11 |
-| API REST | FastAPI + Uvicorn |
-| Administração | Django / Django Admin |
-| Banco relacional | PostgreSQL |
-| Banco NoSQL | MongoDB |
-| Validação | Pydantic |
-| Segurança | OAuth2 Password Flow / JWT |
-| Infraestrutura | Docker / Docker Compose |
-| Documentação | Swagger / OpenAPI |
-| Testes | Pytest + pytest-html |
+O **PostgreSQL** é utilizado para armazenar os usuários, credenciais e permissões.
 
-## Como executar
+O **MongoDB** é utilizado para armazenar os produtos.
 
-**Pré-requisitos:** Docker e Docker Compose.
+A API foi desenvolvida com FastAPI e o Django Admin foi integrado ao projeto para permitir a administração dos usuários e a consulta dos produtos cadastrados.
+
+Os produtos exibidos pelo Django Admin são somente para leitura. O cadastro, alteração e exclusão são feitos pela API.
+
+## Estrutura do projeto
+
+```text
+Desafio_Backend/
+├── app/
+│   ├── auth/
+│   ├── products/
+│   └── main.py
+├── config/
+├── docs/
+├── reports/
+├── templates/
+├── tests/
+│   ├── conftest.py
+│   └── test_api.py
+├── users/
+├── .env.example
+├── Dockerfile
+├── docker-compose.yml
+├── manage.py
+├── pytest.ini
+├── requirements.txt
+└── README.md
+```
+
+## Executando o projeto
+
+Para executar o projeto é necessário ter Docker e Docker Compose instalados.
+
+Primeiro crie o arquivo `.env` utilizando o exemplo disponível no projeto:
 
 ```bash
 cp .env.example .env
-docker compose up
 ```
 
-A API sobe em `http://localhost:8000`.
+No Windows também é possível simplesmente copiar o `.env.example` e renomear a cópia para `.env`.
 
-| Recurso | URL |
-|---|---|
-| Swagger / OpenAPI | http://localhost:8000/docs |
-| Django Admin | http://localhost:8000/admin/ |
-| Health check | http://localhost:8000/health |
+Depois execute:
+
+```bash
+docker compose up -d --build
+```
+
+Para verificar se os containers estão funcionando:
+
+```bash
+docker compose ps
+```
+
+A API ficará disponível em:
+
+```text
+http://localhost:8000
+```
+
+## Swagger
+
+A documentação da API pode ser acessada em:
+
+```text
+http://localhost:8000/docs
+```
+
+Por ela é possível testar o cadastro, login e todas as operações de produtos.
 
 ## Endpoints
 
-**Autenticação**
+### Autenticação
 
-| Método | Rota | Descrição |
-|---|---|---|
-| POST | `/auth/register` | Cadastra um novo usuário |
-| POST | `/auth/login` | Autentica e retorna o JWT |
-| GET | `/auth/me` | Retorna os dados do usuário autenticado |
+| Método | Endpoint         | Descrição                    |
+| ------ | ---------------- | ---------------------------- |
+| POST   | `/auth/register` | Cadastro de usuário          |
+| POST   | `/auth/login`    | Login e geração do token JWT |
+| GET    | `/auth/me`       | Dados do usuário autenticado |
 
-**Produtos** (todas exigem JWT)
+### Produtos
 
-| Método | Rota | Descrição |
-|---|---|---|
-| POST | `/products` | Cadastra um produto |
-| GET | `/products` | Lista os produtos |
-| GET | `/products/{id}` | Consulta um produto por ID |
-| PUT | `/products/{id}` | Atualiza um produto |
-| DELETE | `/products/{id}` | Exclui um produto |
+| Método | Endpoint         | Descrição           |
+| ------ | ---------------- | ------------------- |
+| GET    | `/products`      | Lista os produtos   |
+| GET    | `/products/{id}` | Busca um produto    |
+| POST   | `/products`      | Cadastra um produto |
+| PUT    | `/products/{id}` | Atualiza um produto |
+| DELETE | `/products/{id}` | Exclui um produto   |
+
+Também existe um endpoint para verificar se a aplicação está funcionando:
+
+```text
+GET /health
+```
+
+Resposta:
+
+```json
+{
+  "status": "ok"
+}
+```
 
 ## Autenticação e permissões
 
-O login segue o fluxo **OAuth2 Password Flow**: o usuário envia usuário/senha, a API valida contra o PostgreSQL e retorna um **JWT**, que deve ser enviado como Bearer token nas rotas protegidas.
+A autenticação utiliza OAuth2 Password Flow com JWT.
 
-- Usuário sem token → `401 Unauthorized`
-- Usuário autenticado sem permissão (ex.: usuário comum tentando criar/editar/excluir produto) → `403 Forbidden`
-- Apenas administradores podem criar, atualizar ou excluir produtos; qualquer usuário autenticado pode listar/consultar.
+Após realizar o login, a API retorna um `access_token`, que deve ser utilizado nos endpoints protegidos.
 
-Os produtos exibidos no Django Admin são **somente leitura** — o cadastro é feito exclusivamente pela API FastAPI.
+Existem dois níveis de acesso:
 
-## Validações e erros
+* usuário comum;
+* administrador.
 
-Validações realizadas via Pydantic: campos obrigatórios, nome não vazio, preço maior que zero, status restrito a `Ativo`/`Inativo`. Erros seguem um formato padronizado (`{"error": {"code": ..., "message": ..., "details": ...}}`), com os códigos HTTP apropriados (`401`, `403`, `404`, `409`, `422`).
+Usuários comuns podem consultar produtos, mas não podem criar, alterar ou excluir.
+
+Essas operações são permitidas somente para administradores.
+
+Dessa forma, a API também trata corretamente situações de usuário não autenticado (`401`) e usuário autenticado sem permissão (`403`).
+
+## Django Admin
+
+O painel administrativo está disponível em:
+
+```text
+http://localhost:8000/admin/
+```
+
+Ele é utilizado para gerenciamento dos usuários e permissões.
+
+Os produtos armazenados no MongoDB também podem ser consultados pelo painel, porém ficam disponíveis somente para leitura.
 
 ## Testes
+
+Os testes automatizados foram desenvolvidos utilizando Pytest.
+
+Atualmente a suíte possui **64 testes**, cobrindo os principais fluxos da aplicação, incluindo:
+
+* cadastro de usuários;
+* login;
+* autenticação JWT;
+* tokens inválidos e expirados;
+* permissões de usuário e administrador;
+* CRUD de produtos;
+* validação dos dados;
+* tratamento de erros;
+* produtos inexistentes;
+* testes de regressão.
+
+Para executar:
 
 ```bash
 docker compose exec api pytest -v
 ```
 
-Suíte atual: **10/10 testes aprovados**, cobrindo health check, cadastro/login/JWT, usuário duplicado, credenciais inválidas, autenticação/autorização em rotas protegidas, CRUD completo de produtos e validações de preço/status/nome.
+Resultado atual:
 
-Para gerar o relatório HTML:
+```text
+64 passed
+0 failed
+```
+
+## Relatório dos testes
+
+Também foi utilizado o `pytest-html` para gerar um relatório da execução.
+
+O relatório atual está disponível em:
+
+```text
+reports/test-report.html
+```
+
+Para gerar novamente:
 
 ```bash
-docker compose exec api pytest -v --html=/tmp/test-report.html --self-contained-html
-docker cp desafio-api:/tmp/test-report.html ./reports/test-report.html
+docker compose exec api pytest -v --html=/app/reports/test-report.html --self-contained-html
 ```
 
-## Estrutura do projeto
+## Integração contínua
 
+O projeto utiliza GitHub Actions para executar os testes automaticamente.
+
+O workflow é executado em pushes e pull requests para a branch `main`.
+
+Assim, alterações no projeto passam pela suíte de testes antes de serem consideradas válidas.
+
+## Variáveis de ambiente
+
+O arquivo `.env` não é versionado.
+
+As variáveis necessárias para executar o projeto estão documentadas no:
+
+```text
+.env.example
 ```
-app/
-├── auth/          # rotas, schemas e segurança (JWT)
-└── products/      # rotas, schemas e ProductRepository (MongoDB)
-config/            # settings do Django
-users/             # app Django (modelo de usuário / Admin)
-tests/             # suíte de testes (Pytest)
-docs/              # diagrama de arquitetura
-reports/           # relatório HTML dos testes
-docker-compose.yml
-Dockerfile
-requirements.txt
+
+Para executar localmente, basta criar o `.env` a partir desse arquivo e ajustar os valores caso seja necessário.
+
+## Parando o projeto
+
+Para parar os containers:
+
+```bash
+docker compose down
 ```
 
-## Segurança
+Para remover também os volumes:
 
-`.env` não é versionado — use `.env.example` como referência para as variáveis necessárias.
+```bash
+docker compose down -v
+```
 
----
+## Resultado
 
+O projeto possui:
+
+* API REST com FastAPI;
+* autenticação JWT;
+* controle de acesso por usuário;
+* PostgreSQL para usuários;
+* MongoDB para produtos;
+* CRUD de produtos;
+* Django Admin;
+* Docker Compose;
+* documentação Swagger;
+* 64 testes automatizados;
+* relatório HTML dos testes;
+* integração contínua com GitHub Actions.
+
+Status atual dos testes:
+
+```text
+64/64 testes aprovados
+```
