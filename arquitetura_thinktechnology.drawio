@@ -1,0 +1,91 @@
+<mxfile host="app.diagrams.net">
+  <diagram id="final-arch" name="Arquitetura">
+    <mxGraphModel dx="2287" dy="1258" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="title" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=26;fontStyle=1;" value="Arquitetura da Aplicação — Think Technology" vertex="1">
+          <mxGeometry height="45" width="700" x="350" y="20" as="geometry" />
+        </mxCell>
+        <mxCell id="subtitle" parent="1" style="text;html=1;align=center;verticalAlign=middle;fontSize=14;fontColor=#666666;" value="API REST com autenticação JWT, persistência híbrida e ambiente containerizado" vertex="1">
+          <mxGeometry height="30" width="660" x="370" y="65" as="geometry" />
+        </mxCell>
+        <mxCell id="user" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#666666;fontSize=16;fontStyle=1;" value="Usuário / Swagger" vertex="1">
+          <mxGeometry height="65" width="220" x="590" y="115" as="geometry" />
+        </mxCell>
+        <mxCell id="dockerbox" parent="1" style="swimlane;html=1;rounded=1;startSize=34;horizontal=1;fillColor=#f7fbff;strokeColor=#4a90e2;strokeWidth=2;fontSize=15;fontStyle=1;" value="DOCKER COMPOSE" vertex="1">
+          <mxGeometry height="560" width="1100" x="170" y="220" as="geometry" />
+        </mxCell>
+        <mxCell id="repo" parent="dockerbox" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;" value="ProductRepository&#xa;&#xa;Repository Pattern&#xa;Isola a persistência&#xa;dos produtos" vertex="1">
+          <mxGeometry height="145" width="250" x="370" y="230" as="geometry" />
+        </mxCell>
+        <mxCell id="57Ehmq4BNT2nIzfkJOJy-1" parent="dockerbox" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;rotation=-90;" value="Gerencia usuários" vertex="1">
+          <mxGeometry height="50" width="120" x="820" y="450" as="geometry" />
+        </mxCell>
+        <mxCell id="57Ehmq4BNT2nIzfkJOJy-2" parent="dockerbox" style="text;html=1;whiteSpace=wrap;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;rounded=0;" value="Consulta produtos" vertex="1">
+          <mxGeometry height="30" width="60" x="650" y="265" as="geometry" />
+        </mxCell>
+        <mxCell id="api" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;strokeWidth=2;fontSize=15;fontStyle=1;" value="FastAPI — API REST&#xa;&#xa;/auth/register   /auth/login   /auth/me&#xa;/products   /products/{id}&#xa;&#xa;Validação com Pydantic" vertex="1">
+          <mxGeometry height="135" width="400" x="500" y="275" as="geometry" />
+        </mxCell>
+        <mxCell id="auth" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;fontSize=14;" value="Autenticação e autorização&#xa;&#xa;OAuth2 Password Flow&#xa;JWT&#xa;Rotas protegidas&#xa;401 / 403" vertex="1">
+          <mxGeometry height="145" width="245" x="250" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="postgres" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#dae8fc;strokeColor=#6c8ebf;fontSize=14;fontStyle=1;" value="PostgreSQL&#xa;&#xa;USUÁRIOS&#xa;Credenciais&#xa;Permissões" vertex="1">
+          <mxGeometry height="125" width="185" x="270" y="625" as="geometry" />
+        </mxCell>
+        <mxCell id="mongo" parent="1" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;fillColor=#d5e8d4;strokeColor=#82b366;fontSize=14;fontStyle=1;" value="MongoDB&#xa;&#xa;PRODUTOS&#xa;Nome • descrição&#xa;Preço • status • ID" vertex="1">
+          <mxGeometry height="125" width="185" x="610" y="625" as="geometry" />
+        </mxCell>
+        <mxCell id="django" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;fontSize=14;fontStyle=1;" value="Django Admin&#xa;&#xa;Administração de usuários&#xa;Consulta de produtos&#xa;&#xa;Produtos: somente leitura" vertex="1">
+          <mxGeometry height="145" width="240" x="920" y="470" as="geometry" />
+        </mxCell>
+        <mxCell id="tests" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;fontSize=14;fontStyle=1;" value="TESTES AUTOMATIZADOS&#xa;&#xa;Pytest + pytest-html&#xa;10 testes aprovados&#xa;Relatório HTML" vertex="1">
+          <mxGeometry height="110" width="260" x="180" y="820" as="geometry" />
+        </mxCell>
+        <mxCell id="stack" parent="1" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f5f5f5;strokeColor=#999999;fontSize=13;" value="TECNOLOGIAS UTILIZADAS&#xa;&#xa;Backend: Python 3.11 • FastAPI • Django • Uvicorn&#xa;Dados: PostgreSQL • MongoDB • SQLAlchemy • ProductRepository&#xa;Segurança: OAuth2 • JWT&#xa;Validação: Pydantic&#xa;Infraestrutura: Docker • Docker Compose&#xa;Documentação: Swagger / OpenAPI&#xa;Testes: Pytest • pytest-html" vertex="1">
+          <mxGeometry height="155" width="715" x="750" y="865" as="geometry" />
+        </mxCell>
+        <mxCell id="e1" edge="1" parent="1" source="user" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;" target="api">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e2" edge="1" parent="1" source="api" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#b85450;" target="auth">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e3" edge="1" parent="1" source="api" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#d6b656;" target="repo">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e4" edge="1" parent="1" source="auth" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#6c8ebf;" target="postgres">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e5" edge="1" parent="1" source="repo" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#82b366;" target="mongo">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e6" edge="1" parent="1" source="api" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#9673a6;" target="django">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e7" edge="1" parent="1" source="django" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;strokeWidth=1.5;strokeColor=#9673a6;dashed=1;" target="postgres">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1040" y="760" />
+              <mxPoint x="500" y="760" />
+              <mxPoint x="500" y="687.53" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="e8" edge="1" parent="1" source="django" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;strokeWidth=1.5;strokeColor=#9673a6;dashed=1;" target="repo">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="e9" edge="1" parent="1" source="tests" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=open;endFill=0;strokeWidth=1.5;strokeColor=#d6b656;dashed=1;" target="api">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="130" y="810" />
+              <mxPoint x="130" y="340" />
+              <mxPoint x="500" y="340" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
