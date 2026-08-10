@@ -4,7 +4,7 @@ API REST desenvolvida em **Python**, utilizando **FastAPI** como framework princ
 
 ## Arquitetura
 
-![Arquitetura da aplicação]([docs/arquitetura.png](https://github.com/PauloVporto/Desafio_Backend/blob/main/docs/arquitetura_thinktechnology.png))
+![Arquitetura da aplicação](docs/arquitetura_thinktechnology.png)
 
 | Componente | Responsabilidade |
 |---|---|
