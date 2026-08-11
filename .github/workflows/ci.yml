@@ -17,9 +17,6 @@ jobs:
       - name: Baixar codigo
         uses: actions/checkout@v4
 
-      - name: Criar arquivo de ambiente
-        run: cp .env.example .env
-
       - name: Construir containers
         run: docker compose build
 
