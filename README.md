@@ -36,7 +36,6 @@ Desafio_Backend/
 ├── tests/
 ├── users/
 ├── .dockerignore
-├── .env.example
 ├── .gitignore
 ├── docker-compose.yml
 ├── Dockerfile
@@ -398,15 +397,3 @@ A documentação completa e os schemas podem ser consultados pelo Swagger:
 ```text
 http://localhost:8000/docs
 ```
-
-## Observações
-
-O arquivo `.env.example` contém exemplos das variáveis que podem ser configuradas.
-
-Entretanto, para facilitar a avaliação do projeto, o Docker Compose possui configurações padrão de desenvolvimento e a aplicação pode ser iniciada diretamente com:
-
-```bash
-docker compose up
-```
-
-Não é necessário configurar os bancos manualmente antes da execução.
